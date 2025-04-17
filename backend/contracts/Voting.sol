@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.28;
 
 contract Voting {
     struct Candidate {
@@ -14,25 +14,21 @@ contract Voting {
 
     uint public candidatesCount;
     uint public totalVotes;
+    address public owner;
 
     event votedEvent(uint indexed _candidateId);
 
-    // Modificador para garantir que a função só possa ser chamada pelo deployer
-    address public owner;
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, "You are not the contract owner!");
-        _;
-    }
-
     constructor(string[] memory _names, string[] memory _urls) {
-        owner = msg.sender;  // Define o proprietário como o deployer do contrato
+        require(_names.length == _urls.length, "Dados inconsistentes");
+
+        owner = msg.sender;
+
         for (uint i = 0; i < _names.length; i++) {
-            addCandidate(_names[i], _urls[i]);
+            _addCandidate(_names[i], _urls[i]);
         }
     }
 
-    function addCandidate(string memory _name, string memory _urlImage) private {
+    function _addCandidate(string memory _name, string memory _urlImage) private {
         candidatesCount++;
         candidates[candidatesCount] = Candidate(candidatesCount, _name, _urlImage, 0);
     }
@@ -46,15 +42,5 @@ contract Voting {
         totalVotes++;
 
         emit votedEvent(_candidateId);
-    }
-
-    function getCandidates() public view returns (Candidate[] memory) {
-        Candidate[] memory candidateList = new Candidate[](candidatesCount);
-        
-        for (uint i = 1; i <= candidatesCount; i++) {
-            candidateList[i - 1] = candidates[i];
-        }
-
-        return candidateList;
     }
 }
