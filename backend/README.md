@@ -1,13 +1,14 @@
-# Sample Hardhat Project
+# Rodando o backend
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+## instale as dependências
+`npm install`
 
-Try running some of the following tasks:
+## crie um nodo local com hardhat
+`npx hardhat compile`
+`npx hardhat node`
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
-```
+## faça o deploy do contrato e do relayer
+`npx hardhat deploy --network localhost PATH_TO_CANDIDATES_JSON_FILE`
+
+## console para debug
+`npx hardat console --network localhost`

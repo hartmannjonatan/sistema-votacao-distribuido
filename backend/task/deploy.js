@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { task } = require("hardhat/config")
+const { startRelayer } = require('./relayer');
 
 // Função principal para o deploy
 async function createContract(ethers, args) {
@@ -26,26 +27,29 @@ async function createContract(ethers, args) {
   const candidateNames = candidatesData.candidates.map(c => c.name);
   const candidateImages = candidatesData.candidates.map(c => c.urlImage);
 
-  const [deployer] = await ethers.getSigners();
+  const privateKey = "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113b37b2c5e7c33dcb1622f0193";
+  const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+  const deployer = new ethers.Wallet(privateKey, provider);
   console.log("Deploying contracts with the account:", deployer.address);
 
   const Voting = await ethers.getContractFactory("Voting");
   const voting = await Voting.deploy(candidateNames, candidateImages);
   console.log("Voting contract deployed to:", voting.address);
 
-  // Obtém o primeiro signatário (conta) para fazer o deploy
-  /* const [deployer] = await ethers.getSigners();
-  console.log("Deploying contracts with the account:", deployer.address);
+  const tx = await deployer.sendTransaction({
+    to: voting.address,  // Endereço do contrato
+    value: ethers.utils.parseEther("500000.0"),
+  });
+  await tx.wait();
 
-  // Obtemos a fábrica do contrato "Voting"
-  const Voting = await ethers.getContractFactory("Voting");
+  const info = {
+      address: voting.address,
+      privateKey: deployer.privateKey,
+  };
 
-  // Realiza o deploy do contrato
-  const voting = await Voting.deploy(candidateNames, candidateImages);
-  console.log("Voting contract deployed to:", voting.address); */
+  fs.writeFileSync("./task/deploy-info.json", JSON.stringify(info, null, 2));
 
-  /* const count = await voting.candidatesCount();
-  console.log("Número de candidatos inicializados: "+count); */
+  await startRelayer();
 
 }
 
@@ -53,12 +57,12 @@ async function main(){
   task("deploy", "Deploy with candidates JSON file")
     .addPositionalParam("candidatesFilePath")
     .setAction(async (taskArgs, hre) => {
-      createContract(hre.ethers, taskArgs);
+      await createContract(hre.ethers, taskArgs);
     });
 }
 
-// Executa a função principal e captura os erros
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
