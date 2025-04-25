@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserProvider, Contract, Signer } from "ethers";
 import votingAbi from "./VotingABI.json"; // <- coloque o ABI aqui
-const contractAddress = "0xB66c7746AFc3421f719596Fc26764d7BaA6b9902"; // <-- substitua pelo endereço real
+const contractAddress = "0x76dc748B9c8cbd763865DfF16Eb809208F319039"; // <-- substitua pelo endereço real
 
 interface Candidate {
   id: number;
@@ -16,30 +16,6 @@ export default function App() {
   const [signer, setSigner] = useState<Signer | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [votingStatus, setVotingStatus] = useState<string>("");
-
-  const register = async () => {
-    const address = await signer!.getAddress();
-    const message = `Registrar ${address}`;
-    const signature = await signer!.signMessage(message);
-    const relayerUrl = process.env.REACT_APP_RELAYER_URL || "http://localhost:8546";
-  
-    // Envia pro relayer
-    const response = await fetch(relayerUrl+"/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ address, signature }),
-    });
-  
-    const result = await response.json();
-  
-    if (response.ok) {
-      console.log("Registrado com sucesso!", result);
-    } else {
-      console.error("Erro ao registrar:", result.error);
-    }
-  }
 
   // Conecta à MetaMask
   const connectMetaMask = async () => {
@@ -105,7 +81,7 @@ export default function App() {
   const vote = async (candidateId: number) => {
     if (!signer) return;
     try {
-      await register()
+      //await register()
       const contract = new Contract(contractAddress, votingAbi.abi, signer);
       const tx = await contract.vote(candidateId);
       setVotingStatus("Voting...");
