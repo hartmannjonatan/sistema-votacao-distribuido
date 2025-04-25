@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { CandidatoModel } from "../features/votar/votar-model";
 import { limitarTexto } from "../features/votar/votar-utils";
+import { useNavigate } from "react-router-dom";
 
 interface ConfirmacaoVotoModalProps {
   open: boolean;
@@ -23,9 +24,10 @@ export default function ConfirmacaoVotoModal({
   onClose,
   candidato,
 }: ConfirmacaoVotoModalProps) {
+  const navigate = useNavigate();
+
   const onClickConfirm = () => {
-    console.log("VOTO CONFIRMADO EM: " + candidato?.name);
-    onClose();
+    navigate("/resultadoVotacao");
   };
 
   return (
