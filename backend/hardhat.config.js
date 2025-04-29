@@ -1,6 +1,6 @@
-
 require("@nomiclabs/hardhat-ethers")
 require("./task/deploy.js")
+require("dotenv").config();
 
 const config = {
   solidity: "0.8.28",
@@ -9,10 +9,15 @@ const config = {
       chainId: 1337,
       accounts: [
         {
-          privateKey: '0x4f3edf983ac636a65a842ce7c78d9aa706d3b113b37b2c5e7c33dcb1622f0193',
+          privateKey: process.env.PRIVATE_KEY,
           balance: '1000000000000000000000000'
         },
       ]
+    },
+    sepolia: {
+      url: process.env.SEPOLIA_RPC_URL,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 11155111,
     },
   },
 };

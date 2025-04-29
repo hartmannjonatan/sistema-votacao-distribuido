@@ -4,7 +4,7 @@
 
 ## Execute o projeto:
 
-`npm install`
+`npm start`
 
 ## Acesse no navegador:
 

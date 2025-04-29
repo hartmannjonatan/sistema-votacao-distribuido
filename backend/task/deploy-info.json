@@ -1,4 +1,5 @@
 {
-  "address": "0xB66c7746AFc3421f719596Fc26764d7BaA6b9902",
-  "privateKey": "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113b37b2c5e7c33dcb1622f0193"
+  "address": "0x76dc748B9c8cbd763865DfF16Eb809208F319039",
+  "privateKey": "0xd3b41c41b3df8cee4c58b349fa59db013bd1ca6135b02684310b6e7993e88c71",
+  "network": "hardhat"
 }
