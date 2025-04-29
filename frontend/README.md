@@ -1,7 +1,11 @@
-# Rodando o backend
+## Instalar dependências:
 
-## instale as dependências
 `npm install`
 
-## rode o front
+## Execute o projeto:
+
 `npm start`
+
+## Acesse no navegador:
+
+`http://localhost:3000`
