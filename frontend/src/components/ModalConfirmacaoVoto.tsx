@@ -12,6 +12,7 @@ import {
 import { CandidatoModel } from "../features/votar/votar-model";
 import { limitarTexto } from "../features/votar/votar-utils";
 import { useNavigate } from "react-router-dom";
+import { useVote } from "../hooks/useVote";
 
 interface ConfirmacaoVotoModalProps {
   open: boolean;
@@ -26,7 +27,10 @@ export default function ConfirmacaoVotoModal({
 }: ConfirmacaoVotoModalProps) {
   const navigate = useNavigate();
 
-  const onClickConfirm = () => {
+  const { vote } = useVote();
+
+  const onClickConfirm = async () => {
+    await vote(candidato?.id!!);
     navigate("/resultadoVotacao");
   };
 

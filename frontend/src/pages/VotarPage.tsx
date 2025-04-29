@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -12,13 +12,24 @@ import {
   Typography,
 } from "@mui/material";
 import { stylesLogin } from "./Login";
-import { CandidatoModel, candidatosFakes } from "../features/votar/votar-model";
+import { CandidatoModel } from "../features/votar/votar-model";
 import { useForm } from "react-hook-form";
 import ConfirmacaoVotoModal from "../components/ModalConfirmacaoVoto";
 import { limitarTexto } from "../features/votar/votar-utils";
+import { useFetchCandidates } from "../hooks/useFetchCandidates";
+import { useVotingContract } from "../hooks/useVotingContract";
+import { Navigate } from "react-router-dom";
 
 export default function VotarPage() {
-  const options = candidatosFakes;
+  const { candidates, fetchCandidates } = useFetchCandidates();
+  const { isVoted } = useVotingContract();
+
+  const options = candidates;
+
+  useEffect(() => {
+    fetchCandidates();
+  });
+
   const [open, setOpen] = useState(false);
   const [candidatoSelecionado, setCandidatoSelecionado] =
     useState<CandidatoModel | null>(null);
@@ -38,6 +49,10 @@ export default function VotarPage() {
     setCandidatoSelecionado(candidato || null);
     setOpen(true);
   };
+
+  if (isVoted) {
+    return <Navigate to="/resultadoVotacao" replace />;
+  }
 
   return (
     <Container maxWidth="md">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -8,23 +8,36 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Typography, Paper, Container, css } from "@mui/material";
-import { candidatosFakes } from "../features/votar/votar-model";
 import { stylesLogin } from "./Login";
+import { useFetchCandidates } from "../hooks/useFetchCandidates";
+import { useVotingContract } from "../hooks/useVotingContract";
+import { Navigate } from "react-router-dom";
 
 const cores = ["#f54e68", "#7b5cf5", "#00e676", "#ffee58"];
 
 export default function ResultadoVotacao() {
-  const totalVotos = candidatosFakes.reduce(
+  const { isVoted } = useVotingContract();
+  const { candidates, fetchCandidates } = useFetchCandidates();
+
+  useEffect(() => {
+    fetchCandidates();
+  });
+
+  const totalVotos = candidates.reduce(
     (sum, candidato) => sum + candidato.voteCount,
     0
   );
 
-  const data = candidatosFakes.map((candidato, index) => ({
+  const data = candidates.map((candidato, index) => ({
     name: candidato.name.split(" ")[0],
     votos: candidato.voteCount,
     percent: ((candidato.voteCount / totalVotos) * 100).toFixed(2),
     fill: cores[index % cores.length],
   }));
+
+  if (!isVoted) {
+    return <Navigate to="/votar" replace />;
+  }
 
   return (
     <Container maxWidth="md">

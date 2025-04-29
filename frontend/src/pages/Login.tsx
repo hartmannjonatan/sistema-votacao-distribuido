@@ -10,8 +10,11 @@ import { MetaMaskIcon } from "../components/MetaMaskIcon";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoginFormModel } from "../features/login/login-model";
+import { useVotingContract } from "../hooks/useVotingContract";
 
 export default function Login() {
+  const { connectMetaMask, isVoted } = useVotingContract();
+
   const {
     register,
     handleSubmit,
@@ -20,10 +23,18 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const onSubmit = (data: LoginFormModel) => {
-    console.log("Endereço inserido:", data.address);
-    localStorage.setItem("userAddress", data.address);
-    navigate("/votar");
+  const onSubmit = async (data: LoginFormModel) => {
+    try {
+      await connectMetaMask(data.address);
+      localStorage.setItem("userAddress", data.address);
+      if (isVoted) {
+        navigate("/resultadoVotacao");
+      } else {
+        navigate("/votar");
+      }
+    } catch {
+      console.log("erro");
+    }
   };
 
   return (

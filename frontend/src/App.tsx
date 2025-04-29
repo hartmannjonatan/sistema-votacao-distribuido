@@ -2,6 +2,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import { Box, css, CssBaseline } from "@mui/material";
+import { VotingContractProvider } from "./hooks/useVotingContract";
 
 const theme = createTheme({
   typography: {
@@ -15,7 +16,9 @@ function App() {
       <BrowserRouter>
         <CssBaseline />
         <Box sx={styles.background}>
-          <AppRoutes />
+          <VotingContractProvider>
+            <AppRoutes />
+          </VotingContractProvider>
         </Box>
       </BrowserRouter>
     </ThemeProvider>
