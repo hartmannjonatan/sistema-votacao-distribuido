@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -14,9 +14,14 @@ import {
 import { stylesLogin } from "./Login";
 import { CandidatoModel, candidatosFakes } from "../features/votar/votar-model";
 import { useForm } from "react-hook-form";
+import ConfirmacaoVotoModal from "../components/ModalConfirmacaoVoto";
+import { limitarTexto } from "../features/votar/votar-utils";
 
 export default function VotarPage() {
   const options = candidatosFakes;
+  const [open, setOpen] = useState(false);
+  const [candidatoSelecionado, setCandidatoSelecionado] =
+    useState<CandidatoModel | null>(null);
 
   const {
     register,
@@ -30,7 +35,8 @@ export default function VotarPage() {
 
   const onSubmit = (data: CandidatoModel) => {
     const candidato = options.find((c) => c.id === data.id);
-    console.log("Candidato selecionado:", candidato);
+    setCandidatoSelecionado(candidato || null);
+    setOpen(true);
   };
 
   return (
@@ -43,6 +49,7 @@ export default function VotarPage() {
           ChainSAFE-Poll
         </Typography>
         <Typography variant="h6">Choose your candidate:</Typography>
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl component="fieldset" error={!!errors.id}>
             <RadioGroup
@@ -69,13 +76,14 @@ export default function VotarPage() {
                       selectedId === candidato.id && stylesVotar.selectedOption,
                     ]}
                   >
-                    {candidato.name}
+                    {limitarTexto(candidato?.name)}
                   </Typography>
                 </Box>
               ))}
             </RadioGroup>
             {errors.id && <FormHelperText>{errors.id.message}</FormHelperText>}
           </FormControl>
+
           <Button
             type="submit"
             fullWidth
@@ -86,6 +94,12 @@ export default function VotarPage() {
           </Button>
         </form>
       </Paper>
+
+      <ConfirmacaoVotoModal
+        open={open}
+        onClose={() => setOpen(false)}
+        candidato={candidatoSelecionado}
+      />
     </Container>
   );
 }
