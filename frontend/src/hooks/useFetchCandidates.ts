@@ -2,7 +2,12 @@ import { useState } from "react";
 import { useVotingContract } from "./useVotingContract";
 import { CandidatoModel } from "../features/votar/votar-model";
 
-export function useFetchCandidates() {
+interface FetchCandidatesProps {
+  candidates: CandidatoModel[];
+  fetchCandidates: () => Promise<void>;
+}
+
+export function useFetchCandidates(): FetchCandidatesProps {
   const { contract } = useVotingContract();
   const [candidates, setCandidates] = useState<CandidatoModel[]>([]);
 

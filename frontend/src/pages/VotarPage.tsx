@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   css,
   FormControl,
@@ -64,50 +65,58 @@ export default function VotarPage() {
           ChainSAFE-Poll
         </Typography>
         <Typography variant="h6">Choose your candidate:</Typography>
-
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl component="fieldset" error={!!errors.id}>
-            <RadioGroup
-              value={selectedId || ""}
-              onChange={(e) => setValue("id", Number(e.target.value))}
-            >
-              {options.map((candidato) => (
-                <Box
-                  key={candidato.id}
-                  sx={stylesVotar.optionBox}
-                  onClick={() => setValue("id", candidato.id)}
-                >
-                  <Radio
-                    value={candidato.id}
-                    checked={selectedId === candidato.id}
-                    {...register("id", { required: "Required field" })}
-                    color="primary"
-                  />
-                  <Typography
-                    variant="subtitle1"
-                    fontWeight="bold"
-                    sx={[
-                      stylesVotar.optionLabel,
-                      selectedId === candidato.id && stylesVotar.selectedOption,
-                    ]}
+        {candidates && candidates.length > 1 ? (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl component="fieldset" error={!!errors.id}>
+              <RadioGroup
+                value={selectedId || ""}
+                onChange={(e) => setValue("id", Number(e.target.value))}
+              >
+                {options.map((candidato) => (
+                  <Box
+                    key={candidato.id}
+                    sx={stylesVotar.optionBox}
+                    onClick={() => setValue("id", candidato.id)}
                   >
-                    {limitarTexto(candidato?.name)}
-                  </Typography>
-                </Box>
-              ))}
-            </RadioGroup>
-            {errors.id && <FormHelperText>{errors.id.message}</FormHelperText>}
-          </FormControl>
+                    <Radio
+                      value={candidato.id}
+                      checked={selectedId === candidato.id}
+                      {...register("id", { required: "Required field" })}
+                      color="primary"
+                    />
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight="bold"
+                      sx={[
+                        stylesVotar.optionLabel,
+                        selectedId === candidato.id &&
+                          stylesVotar.selectedOption,
+                      ]}
+                    >
+                      {limitarTexto(candidato?.name)}
+                    </Typography>
+                  </Box>
+                ))}
+              </RadioGroup>
+              {errors.id && (
+                <FormHelperText>{errors.id.message}</FormHelperText>
+              )}
+            </FormControl>
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={stylesVotar.button}
-          >
-            Vote
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={stylesVotar.button}
+            >
+              Vote
+            </Button>
+          </form>
+        ) : (
+          <Box display="flex" justifyContent="center" mt={4}>
+            <CircularProgress />
+          </Box>
+        )}
       </Paper>
 
       <ConfirmacaoVotoModal

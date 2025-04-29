@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,6 +8,7 @@ import {
   Typography,
   css,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import { CandidatoModel } from "../features/votar/votar-model";
 import { limitarTexto } from "../features/votar/votar-utils";
@@ -29,8 +30,12 @@ export default function ConfirmacaoVotoModal({
 
   const { vote } = useVote();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const onClickConfirm = async () => {
+    setIsLoading(true);
     await vote(candidato?.id!!);
+    setIsLoading(false);
     navigate("/resultadoVotacao");
   };
 
@@ -47,40 +52,48 @@ export default function ConfirmacaoVotoModal({
           Confirm vote:
         </Typography>
       </DialogTitle>
-      <DialogContent sx={stylesConfirmacao.dialogContent}>
-        <Box sx={stylesConfirmacao.imagemWrapper}>
-          <Box sx={stylesConfirmacao.boxImagem}>
-            <img
-              src={candidato?.urlImage}
-              alt="candidato"
-              style={stylesConfirmacao.imagem}
-            />
-          </Box>
+      {isLoading ? (
+        <Box display="flex" justifyContent="center" mt={4} mb={4}>
+          <CircularProgress />
         </Box>
-        <Typography sx={stylesConfirmacao.contentText}>
-          <strong>{limitarTexto(candidato?.name, 300)}</strong>
-        </Typography>
-      </DialogContent>
-      <DialogActions sx={stylesConfirmacao.boxBotoes}>
-        <Button
-          fullWidth
-          variant="contained"
-          color="error"
-          sx={stylesConfirmacao.button}
-          onClick={onClose}
-        >
-          Cancel
-        </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          color="success"
-          sx={stylesConfirmacao.button}
-          onClick={onClickConfirm}
-        >
-          Confirm
-        </Button>
-      </DialogActions>
+      ) : (
+        <>
+          <DialogContent sx={stylesConfirmacao.dialogContent}>
+            <Box sx={stylesConfirmacao.imagemWrapper}>
+              <Box sx={stylesConfirmacao.boxImagem}>
+                <img
+                  src={candidato?.urlImage}
+                  alt="candidato"
+                  style={stylesConfirmacao.imagem}
+                />
+              </Box>
+            </Box>
+            <Typography sx={stylesConfirmacao.contentText}>
+              <strong>{limitarTexto(candidato?.name, 300)}</strong>
+            </Typography>
+          </DialogContent>
+          <DialogActions sx={stylesConfirmacao.boxBotoes}>
+            <Button
+              fullWidth
+              variant="contained"
+              color="error"
+              sx={stylesConfirmacao.button}
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              color="success"
+              sx={stylesConfirmacao.button}
+              onClick={onClickConfirm}
+            >
+              Confirm
+            </Button>
+          </DialogActions>
+        </>
+      )}
     </Dialog>
   );
 }

@@ -11,9 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoginFormModel } from "../features/login/login-model";
 import { useVotingContract } from "../hooks/useVotingContract";
+import { useState } from "react";
 
 export default function Login() {
   const { connectMetaMask, isVoted } = useVotingContract();
+  const [connectError, setConnectError] = useState<string | null>(null);
 
   const {
     register,
@@ -27,13 +29,14 @@ export default function Login() {
     try {
       await connectMetaMask(data.address);
       localStorage.setItem("userAddress", data.address);
+      setConnectError(null);
       if (isVoted) {
         navigate("/resultadoVotacao");
       } else {
         navigate("/votar");
       }
     } catch {
-      console.log("erro");
+      setConnectError("Erro ao tentar se conectar com o endereço solicitado!");
     }
   };
 
@@ -61,9 +64,10 @@ export default function Login() {
             {...register("address", {
               required: "Required field",
             })}
-            error={!!errors.address}
-            helperText={errors.address?.message}
+            error={!!errors.address || !!connectError}
+            helperText={errors.address?.message || connectError}
           />
+
           <Button
             type="submit"
             fullWidth
