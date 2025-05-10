@@ -70,12 +70,12 @@ validator:
 	# Cria o nó validador
 	@echo "Criando nó validador..."
 	docker run -d --name besu-validator \
-		-v $(PWD)/$(GENESIS_FILE):/genesis.json \
-		-v $(PWD)/besu-validator-data:/opt/besu/data \
+		-v ./$(GENESIS_FILE):/opt/besu/genesis.json \
+		-v ./besu-validator-data:/opt/besu/data \
 		-p $(VALIDATOR_RPC_PORT):8545	 \
 		-p $(VALIDATOR_P2P_PORT):30303 \
 		$(DOCKER_IMAGE) \
-		--genesis-file genesis/genesis.json \
+		--genesis-file genesis.json \
 		--sync-min-peers=0 \
 		--rpc-http-enabled --rpc-http-api=ADMIN,ETH,NET,WEB3,DEBUG,MINER,CLIQUE \
 		--bootnodes $(GENESIS_NODE_ADDRESS) \
