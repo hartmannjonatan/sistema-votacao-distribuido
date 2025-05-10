@@ -75,7 +75,7 @@ validator:
 		-p $(VALIDATOR_RPC_PORT):8545	 \
 		-p $(VALIDATOR_P2P_PORT):30303 \
 		$(DOCKER_IMAGE) \
-		--genesis-file /genesis.json \
+		--genesis-file genesis/genesis.json \
 		--sync-min-peers=0 \
 		--rpc-http-enabled --rpc-http-api=ADMIN,ETH,NET,WEB3,DEBUG,MINER,CLIQUE \
 		--bootnodes $(GENESIS_NODE_ADDRESS) \
