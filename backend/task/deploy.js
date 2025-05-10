@@ -30,7 +30,11 @@ async function createContract(ethers, args, network) {
   if (network.name === "sepolia") {
     provider = new ethers.providers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
   } else {
-    provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+    if (network.name === "private") {
+      provider = new ethers.providers.JsonRpcProvider(process.env.PRIVATE_NETWORK_URL);
+    } else {
+      provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+    }
   }
 
    // Configura o deployer a partir da chave privada de .env
@@ -38,9 +42,13 @@ async function createContract(ethers, args, network) {
   const deployer = new ethers.Wallet(privateKey, provider);
   console.log("Deploying contracts with the account:", deployer.address);
 
+  const gasPrice = network.name === "sepolia" ? ethers.utils.parseUnits("20", "gwei") : undefined;
   // Obtém a fábrica do contrato "Voting" e faz o deploy com os dados dos candidatos
   const Voting = await ethers.getContractFactory("Voting", deployer);
-  const voting = await Voting.deploy(candidateNames, candidateImages);
+  const voting = await Voting.deploy(candidateNames, candidateImages, {
+    gasLimit: 500000,
+    gasPrice: gasPrice
+  });
 
   await voting.deployed();
   console.log("Voting contract deployed to:", voting.address);

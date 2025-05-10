@@ -20,6 +20,12 @@ const config = {
       accounts: [process.env.PRIVATE_KEY],
       chainId: 11155111,
     },
+    private: {
+      url: process.env.PRIVATE_NETWORK_URL,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 2025,
+      timeout: 200000
+    }
   },
 };
 
