@@ -42,13 +42,9 @@ async function createContract(ethers, args, network) {
   const deployer = new ethers.Wallet(privateKey, provider);
   console.log("Deploying contracts with the account:", deployer.address);
 
-  const gasPrice = network.name === "sepolia" ? ethers.utils.parseUnits("20", "gwei") : undefined;
   // Obtém a fábrica do contrato "Voting" e faz o deploy com os dados dos candidatos
   const Voting = await ethers.getContractFactory("Voting", deployer);
-  const voting = await Voting.deploy(candidateNames, candidateImages, {
-    gasLimit: 500000,
-    gasPrice: gasPrice
-  });
+  const voting = await Voting.deploy(candidateNames, candidateImages);
 
   await voting.deployed();
   console.log("Voting contract deployed to:", voting.address);

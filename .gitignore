@@ -1,2 +1,6 @@
 **/package-lock.json
 **/node_modules/
+**/besu-genesis-data/
+**/besu-validator-data/
+**/.env
+**/deploy-info.json
