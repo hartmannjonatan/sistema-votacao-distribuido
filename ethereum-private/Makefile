@@ -16,8 +16,8 @@ write-key:
 	@mkdir -p besu-genesis-data
 	@echo $(NODE_PRIVATE_KEY) > besu-genesis-data/key
 
-# Alvo "genesis-node": Cria o nó gerador
-genesis-node: write-key
+# Alvo "genesis": Cria o nó gerador
+genesis: write-key
 
 	@echo "Criando nó gerador..."
 	docker run -d --name besu-genesis \
@@ -35,7 +35,7 @@ genesis-node: write-key
 		--rpc-http-cors-origins="*" \
 		--host-allowlist="*"
 
-	@sleep 10
+	@sleep 15
 
 	@echo "Nó gerador criado!"
 	@echo "O endereço do nó: $(NODE_ADDRESS)"
