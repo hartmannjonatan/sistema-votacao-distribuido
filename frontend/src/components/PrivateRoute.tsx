@@ -6,9 +6,11 @@ interface PrivateRouteProps {
   children: JSX.Element;
 }
 
+// Componente de rota protegida que só permite acesso se o usuário estiver autenticado
 export function PrivateRoute({ children }: PrivateRouteProps) {
-  const { isAuthenticated } = useVotingContract();
+  const { isAuthenticated } = useVotingContract(); // Verifica se o usuário está autenticado
 
+  // Se não estiver autenticado, redireciona para a página inicial
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }

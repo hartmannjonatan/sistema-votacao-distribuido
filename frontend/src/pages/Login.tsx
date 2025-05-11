@@ -13,8 +13,10 @@ import { LoginFormModel } from "../features/login/login-model";
 import { useVotingContract } from "../hooks/useVotingContract";
 import { useState } from "react";
 
+// Página de login do sistema de votação com autenticação via MetaMask.
+// Permite que o usuário insira seu endereço da blockchain e, se válido, redireciona para a página de votação ou resultados.
 export default function Login() {
-  const { connectMetaMask, isVoted } = useVotingContract();
+  const { connectMetaMask, isVoted } = useVotingContract(); // Hook que gerencia a conexão com o contrato e verifica se já votou
   const [connectError, setConnectError] = useState<string | null>(null);
 
   const {
@@ -27,13 +29,13 @@ export default function Login() {
 
   const onSubmit = async (data: LoginFormModel) => {
     try {
-      await connectMetaMask(data.address);
-      localStorage.setItem("userAddress", data.address);
+      await connectMetaMask(data.address); // Tenta conectar com o endereço fornecido
+      localStorage.setItem("userAddress", data.address); // Salva o endereço em cache
       setConnectError(null);
       if (isVoted) {
-        navigate("/resultadoVotacao");
+        navigate("/resultadoVotacao"); // Redireciona se o usuário já votou
       } else {
-        navigate("/votar");
+        navigate("/votar"); // Redireciona para a votação
       }
     } catch {
       setConnectError("Erro ao tentar se conectar com o endereço solicitado!");

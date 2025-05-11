@@ -21,17 +21,19 @@ import { useFetchCandidates } from "../hooks/useFetchCandidates";
 import { useVotingContract } from "../hooks/useVotingContract";
 import { Navigate } from "react-router-dom";
 
+// Página de votação onde o usuário pode selecionar um candidato e confirmar seu voto.
+// Caso o usuário já tenha votado, é redirecionado automaticamente para os resultados.
 export default function VotarPage() {
-  const { candidates, fetchCandidates } = useFetchCandidates();
-  const { isVoted } = useVotingContract();
+  const { candidates, fetchCandidates } = useFetchCandidates(); // Hook para buscar os candidatos
+  const { isVoted } = useVotingContract(); // Verifica se o usuário já votou
 
   const options = candidates;
 
   useEffect(() => {
-    fetchCandidates();
+    fetchCandidates(); // Busca os candidatos ao carregar a página
   });
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // Controla abertura do modal de confirmação
   const [candidatoSelecionado, setCandidatoSelecionado] =
     useState<CandidatoModel | null>(null);
 
@@ -43,7 +45,7 @@ export default function VotarPage() {
     formState: { errors },
   } = useForm<CandidatoModel>();
 
-  const selectedId = watch("id");
+  const selectedId = watch("id"); // Observa o id do candidato selecionado
 
   const onSubmit = (data: CandidatoModel) => {
     const candidato = options.find((c) => c.id === data.id);
@@ -52,7 +54,7 @@ export default function VotarPage() {
   };
 
   if (isVoted) {
-    return <Navigate to="/resultadoVotacao" replace />;
+    return <Navigate to="/resultadoVotacao" replace />; // Redireciona se o usuário já votou
   }
 
   return (

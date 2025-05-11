@@ -7,16 +7,22 @@ interface FetchCandidatesProps {
   fetchCandidates: () => Promise<void>;
 }
 
+// Hook customizado responsável por buscar os candidatos da blockchain e fornecer seus dados.
+// Ele utiliza o contrato de votação (de `useVotingContract`) para interagir com os candidatos e
+// obter as informações necessárias, como nome, imagem e contagem de votos.
 export function useFetchCandidates(): FetchCandidatesProps {
-  const { contract } = useVotingContract();
+  const { contract } = useVotingContract(); // Obtém o contrato de votação
   const [candidates, setCandidates] = useState<CandidatoModel[]>([]);
 
+  // Função para buscar os candidatos da blockchain
   const fetchCandidates = async () => {
-    if (!contract) return;
+    if (!contract) return; // Se o contrato não existir, não faz nada
     try {
+      // Obtém a quantidade total de candidatos
       const candidatesCount: number = await contract?.candidatesCount();
       const loadedCandidates: CandidatoModel[] = [];
 
+      // Itera sobre todos os candidatos e busca suas informações
       for (let i = 1; i <= candidatesCount; i++) {
         const c = await contract?.candidates(i);
         loadedCandidates.push({
@@ -32,5 +38,5 @@ export function useFetchCandidates(): FetchCandidatesProps {
     }
   };
 
-  return { candidates, fetchCandidates };
+  return { candidates, fetchCandidates }; // Retorna os candidatos e a função para buscar os candidatos
 }

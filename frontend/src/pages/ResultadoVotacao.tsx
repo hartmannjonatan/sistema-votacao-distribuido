@@ -15,12 +15,13 @@ import { Navigate } from "react-router-dom";
 
 const cores = ["#f54e68", "#7b5cf5", "#00e676", "#ffee58"];
 
+// Página de resultado da votação que exibe um gráfico de barras com a porcentagem de votos para cada candidato
 export default function ResultadoVotacao() {
-  const { isVoted } = useVotingContract();
-  const { candidates, fetchCandidates } = useFetchCandidates();
+  const { isVoted } = useVotingContract(); // Verifica se o usuário já votou
+  const { candidates, fetchCandidates } = useFetchCandidates(); // Hook para buscar os candidatos e seus votos
 
   useEffect(() => {
-    fetchCandidates();
+    fetchCandidates(); // Busca os dados dos candidatos ao carregar o componente
   });
 
   const totalVotos = candidates.reduce(
@@ -28,6 +29,7 @@ export default function ResultadoVotacao() {
     0
   );
 
+  // Prepara os dados para o gráfico de barras
   const data = candidates.map((candidato, index) => ({
     name: candidato.name.split(" ")[0],
     votos: candidato.voteCount,
@@ -36,7 +38,7 @@ export default function ResultadoVotacao() {
   }));
 
   if (!isVoted) {
-    return <Navigate to="/votar" replace />;
+    return <Navigate to="/votar" replace />; // Redireciona se o usuário ainda não votou
   }
 
   return (

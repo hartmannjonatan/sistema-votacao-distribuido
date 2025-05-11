@@ -10,14 +10,20 @@ const theme = createTheme({
   },
 });
 
+// Componente raiz da aplicação.
+// Aplica o tema personalizado, configura o roteamento e fornece o contexto do contrato de votação.
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
+        {/* Habilita o roteamento com base em URL */}
         <CssBaseline />
+        {/* Normaliza estilos base para consistência entre navegadores */}
         <Box sx={styles.background}>
           <VotingContractProvider>
+            {/* Fornece o contexto de autenticação/metamask */}
             <AppRoutes />
+            {/* Define e renderiza as rotas da aplicação */}
           </VotingContractProvider>
         </Box>
       </BrowserRouter>

@@ -21,20 +21,22 @@ interface ConfirmacaoVotoModalProps {
   candidato?: CandidatoModel | null;
 }
 
+// Componente de modal de confirmação de voto que exibe os dados do candidato selecionado
+// e permite confirmar ou cancelar a ação de votação.
 export default function ConfirmacaoVotoModal({
   open,
   onClose,
   candidato,
 }: ConfirmacaoVotoModalProps) {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook para navegação entre rotas
 
-  const { vote } = useVote();
+  const { vote } = useVote(); // Hook customizado que executa a lógica de voto
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Estado para controlar o carregamento
 
   const onClickConfirm = async () => {
     setIsLoading(true);
-    await vote(candidato?.id!!);
+    await vote(candidato?.id!!); // Executa a função de voto com o ID do candidato
     setIsLoading(false);
     navigate("/resultadoVotacao");
   };
